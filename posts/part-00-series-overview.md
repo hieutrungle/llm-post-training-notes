@@ -1,7 +1,7 @@
 ---
 title: "Sharpen or Expand? A Study Series on LLM Post-Training"
 kind: Study notes
-date: 2026-11-16 18:00:00 -0600
+date: 2026-11-16 00:00:00 -0600
 series: llm-post-training
 part: 0
 summary: "Does reinforcement learning teach a language model to reason in new ways, or make it more reliable at what it could already do? Part 0 of a 12-part series that builds LLM post-training from first principles and tests it in a real experiment."
