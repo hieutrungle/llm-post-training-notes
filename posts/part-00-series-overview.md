@@ -25,8 +25,6 @@ The two readings make different predictions, and those predictions can be measur
 
 ![Benchmark pass@k against the number of samples per problem k, on a log scale from 1 to 1024, for three illustrative models. The sharpened model beats the base model at k = 1 (0.47 vs 0.30) but falls below it from about k = 8 and ends at 0.71 vs 0.85 at k = 1024. The expanded model stays above both at every k and ends at 0.91.]({{ '/assets/img/llm-post-training/part-00-sharpen-vs-expand.png' | relative_url }})
 
-*Illustration with made-up per-problem success probabilities for 1,000 problems, not experimental data. "Sharpened" makes already-common solutions more likely and lets rare ones fade; "Expanded" makes the same gain on common solutions and also makes 40% of the rarely or never solved problems reliably solvable. pass@k is the share of problems solved at least once in k samples. Script: [figures/part00_sharpen_vs_expand.py](https://github.com/hieutrungle/llm-post-training-notes/blob/main/figures/part00_sharpen_vs_expand.py).*
-
 pass@1 alone cannot tell these two models apart: both improve it. The difference only appears when we look at many samples per problem, and at which problems change. Most of this series is about making that comparison precise.
 
 ## Why a series
