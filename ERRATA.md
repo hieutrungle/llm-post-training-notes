@@ -2,7 +2,19 @@
 
 Corrections made after a post was published, newest first. Each entry gives the part, the section, what changed and why.
 
-_None yet._
+### 2026-11-16 · Part 1, "What does capability mean for an LLM?"
+
+A review after publication; no derivation or number changed.
+
+- "Same pass@1, different breadth": "Section 9 comes back to this" pointed nowhere, because the blog headings are not numbered. It now names the section on reasoning diversity.
+- "Why nonzero probability is not a useful definition": top-k and top-p were described with $k$ and $p$, which collide with pass@k's $k$ and the success probability $p$. The sampler settings are now $K$ and $p_{\text{top}}$, with a sentence that they are unrelated.
+- Same section: "no amount of sampling will ever show it" became "no feasible amount".
+- "pass@1 and pass@k": added the assumption behind $1-(1-p)^k$ (independent samples from one distribution).
+- Animation reading notes: the $k = 1$ bullet gave the exact 40.0% only; it now also gives the simulated 9 of 20 runs the lane shows.
+- "Estimating pass@k": "the unbiased estimator averages exactly 0.570" now says its average equals the true value (0.570 to three decimals).
+- "In my experiments": added how the hard problems were selected (solved at most 4 times in 16 samples by the base model, in a separate run with its own seed).
+- "Reasoning diversity": $H_{\text{correct}}$ was defined over trajectories but applied to strategies. The post now defines the strategy-level masses $q(z \mid x)$ and the entropy over them.
+- Blog layout: the seven-column pass@k table overflowed on phones; wide tables now scroll inside their own box on narrow screens.
 
 ## Corrections to the study notes
 

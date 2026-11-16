@@ -49,9 +49,9 @@ $$
 \exists\, \tau \in \mathcal{S}(x): \ \pi_\theta(\tau \mid x) \gt 0.
 $$
 
-Under pure softmax sampling, at a positive temperature and with no truncation, this is true almost by construction. Every token has positive probability at every step, so every finite sequence of tokens has positive probability, including a correct solution produced by chance. A correct trajectory with probability $$10^{-100}$$ is in the support, yet no amount of sampling will ever show it. The support cannot tell a model that solves a problem every time from one that never will in practice.
+Under pure softmax sampling, at a positive temperature and with no truncation, this is true almost by construction. Every token has positive probability at every step, so every finite sequence of tokens has positive probability, including a correct solution produced by chance. A correct trajectory with probability $$10^{-100}$$ is in the support, yet no feasible amount of sampling will ever show it. The support cannot tell a model that solves a problem every time from one that never will in practice.
 
-Truncated sampling breaks the definition in a different way. Top-k sampling keeps the $$k$$ most likely tokens at each step [1], and top-p (nucleus) sampling keeps the smallest set of tokens whose probability reaches $$p$$ [2]. Both set every other token's probability to exactly zero, so the support becomes finite and depends on the sampler. A solution can be in the support at temperature 1.0 with no truncation and outside it at top-p 0.95. This matters because RL rollouts and evaluation often use different sampling settings, as the experiment below does. The set of solutions a model can reach during training is then not the same set it can reach at evaluation.
+Truncated sampling breaks the definition in a different way. Top-k sampling keeps only the $$K$$ most likely tokens at each step [1], and top-p (nucleus) sampling keeps the smallest set of tokens whose cumulative probability reaches a threshold $$p_{\text{top}}$$ [2]. These are sampler settings, unrelated to the number of samples $$k$$ and the success probability $$p$$ used in the rest of this part. Both set every other token's probability to exactly zero, so the support becomes finite and depends on the sampler. A solution can be in the support at temperature 1.0 with no truncation and outside it at top-p 0.95. This matters because RL rollouts and evaluation often use different sampling settings, as the experiment below does. The set of solutions a model can reach during training is then not the same set it can reach at evaluation.
 
 So the support is either too large (softmax) or a property of the sampler (truncation). Neither answers the question we actually care about, which is operational:
 
@@ -75,7 +75,7 @@ $$
 \text{pass@}k = 1 - (1 - p)^k.
 $$
 
-For example, a problem with $$p = 0.1$$ has $$\text{pass@}8 = 1 - 0.9^8 \approx 0.570$$ and $$\text{pass@}32 = 1 - 0.9^{32} \approx 0.966$$. On a benchmark, pass@k is this per-problem value averaged over problems. The next section shows why the averaging matters.
+The formula assumes that the $$k$$ samples are independent draws from the same distribution, as in ordinary repeated sampling; beam search, or samples that continue a shared prefix, break that assumption. For example, a problem with $$p = 0.1$$ has $$\text{pass@}8 = 1 - 0.9^8 \approx 0.570$$ and $$\text{pass@}32 = 1 - 0.9^{32} \approx 0.966$$. On a benchmark, pass@k is this per-problem value averaged over problems. The next section shows why the averaging matters.
 
 How many samples does a rare success need? Setting $$\text{pass@}k = 1/2$$ and solving gives $$k = \ln 2 \,/\, \big({-\ln(1-p)}\big) \approx 0.69/p$$ for small $$p$$. To see a success of probability $$p$$ in about half of all evaluation runs, draw about $$0.7/p$$ samples per problem: 2 samples for $$p = 0.4$$, 7 for $$p = 0.1$$, 14 for $$p = 0.05$$, 69 for $$p = 0.01$$ and 693 for $$p = 0.001$$.
 
@@ -95,7 +95,7 @@ Each lane is one problem, and each thin row in a lane is one simulated evaluatio
 
 Read the lanes from left to right:
 
-- **At k = 1** the lanes show pass@1. The problem with $$p = 0.4$$ is solved in 40.0% of runs; the rarer problems are almost never solved.
+- **At k = 1** the lanes show pass@1. The problem with $$p = 0.4$$ has an exact pass@1 of 40.0%, and 9 of its 20 simulated runs succeed on the first sample. The rarer problems are almost never solved.
 - **At k = 16**, $$p = 0.1$$ and $$p = 0.05$$ are solved in most runs (81.5% and 56.0%), while $$p = 0.01$$ is still rare (14.9%).
 - **At k = 64**, $$p = 0.01$$ is solved in about half the runs (47.4%). The problem with $$p = 0.001$$ still looks unsolvable at 6.2%.
 - **At k = 1024**, even $$p = 0.001$$ is solved in most runs (64.1%). In the simulation, 12 of its 20 runs found a correct answer and 8 saw none in 1,024 samples, although the problem's success probability is 0.001.
@@ -104,7 +104,7 @@ Large $$k$$ works like a microscope: it reveals successes too rare to appear in 
 
 ## Same pass@1, different breadth
 
-For one problem, pass@k depends only on $$p$$. Two models with the same $$p = 0.4$$ on a problem have the same $$\text{pass@}k = 1 - 0.6^k$$ for every $$k$$, whether one of them always uses a single strategy and the other spreads its successes over ten. pass@k sees the total mass on the success set, not how that mass is organized. Section 9 comes back to this.
+For one problem, pass@k depends only on $$p$$. Two models with the same $$p = 0.4$$ on a problem have the same $$\text{pass@}k = 1 - 0.6^k$$ for every $$k$$, whether one of them always uses a single strategy and the other spreads its successes over ten. pass@k sees the total mass on the success set, not how that mass is organized. The section on reasoning diversity comes back to this.
 
 On a benchmark the picture changes, because benchmark pass@k averages a nonlinear function of $$p$$ over problems. Take two problems and two models with the same average pass@1 of 0.4:
 
@@ -199,7 +199,7 @@ The estimator is **unbiased**. Any fixed subset of $$k$$ samples consists of $$k
 
 A worked example: with $$n = 16$$, $$c = 2$$ and $$k = 8$$, $$\binom{14}{8} = 3003$$ and $$\binom{16}{8} = 12870$$, so the estimate is $$1 - 3003/12870 \approx 0.767$$.
 
-The obvious alternative is to plug $$\hat p = c/n$$ into the formula. Here it gives $$1 - (1 - 2/16)^8 \approx 0.656$$, and it is biased low. $$\hat p$$ is an unbiased estimate of $$p$$, but $$f_k$$ is concave, so by Jensen's inequality again, $$\mathbb{E}[f_k(\hat p)] \le f_k(\mathbb{E}[\hat p]) = f_k(p)$$. For $$p = 0.1$$, $$n = 16$$ and $$k = 8$$, the plug-in averages 0.491, against a true pass@8 of 0.570, while the unbiased estimator averages exactly 0.570. The [checks script](https://github.com/hieutrungle/llm-post-training-notes/blob/main/checks/part01_checks.py) verifies unbiasedness by exact summation over all outcomes for several $$n$$, $$k$$ and $$p$$, and by simulation.
+The obvious alternative is to plug $$\hat p = c/n$$ into the formula. Here it gives $$1 - (1 - 2/16)^8 \approx 0.656$$, and it is biased low. $$\hat p$$ is an unbiased estimate of $$p$$, but $$f_k$$ is concave, so by Jensen's inequality again, $$\mathbb{E}[f_k(\hat p)] \le f_k(\mathbb{E}[\hat p]) = f_k(p)$$. For $$p = 0.1$$, $$n = 16$$ and $$k = 8$$, the plug-in averages 0.491, against a true pass@8 of 0.570, while the average of the unbiased estimator equals the true value exactly (0.570 to three decimals). The [checks script](https://github.com/hieutrungle/llm-post-training-notes/blob/main/checks/part01_checks.py) verifies unbiasedness by exact summation over all outcomes for several $$n$$, $$k$$ and $$p$$, and by simulation.
 
 <div class="note" markdown="1">
 <span class="label">In my experiments</span>
@@ -208,7 +208,7 @@ In [sharpen-or-expand](https://github.com/hieutrungle/sharpen-or-expand), every 
 
 Changes are also tracked problem by problem ([`transitions.py`](https://github.com/hieutrungle/sharpen-or-expand/blob/main/soe/utils/metric/transitions.py)). A problem counts as solved at $$k$$ when its estimated pass@k is at least 0.5, and each problem is labeled gained, lost, kept or never solved between two checkpoints. At $$k = 1$$ "solved" means solved in at least half of the samples: reliable, the sharpening view. At the largest $$k$$ it means solved at least once: reachable, the expansion view.
 
-The base model, Qwen3.5-4B-Base, shows why the bound in the previous section matters. On the 233 hard problems ([report](https://github.com/hieutrungle/sharpen-or-expand/blob/main/docs/reports/qwen35-4b-base_soe-eval-v4_report.json)), its pass@1 is 0.0695, pass@16 is 0.3621 and pass@64 is 0.4893: 114 problems were solved at least once in 64 samples and 119 never were. Each of those 119 can still have $$p$$ up to about 4.6%. "Unsolved by the base model" means "below about 5% at this budget", and that is the baseline a claim of expansion has to beat.
+The base model, Qwen3.5-4B-Base, shows why the bound in the previous section matters. The hard problems were drawn from those the base model solved at most 4 times in 16 samples, in a [separate selection run](https://github.com/hieutrungle/sharpen-or-expand/blob/main/docs/decisions/005-hard-subset.md) with its own random seed, so that selection does not bias the evaluated pass rates. On the 233 hard problems ([report](https://github.com/hieutrungle/sharpen-or-expand/blob/main/docs/reports/qwen35-4b-base_soe-eval-v4_report.json)), its pass@1 is 0.0695, pass@16 is 0.3621 and pass@64 is 0.4893: 114 problems were solved at least once in 64 samples and 119 never were. Each of those 119 can still have $$p$$ up to about 4.6%. "Unsolved by the base model" means "below about 5% at this budget", and that is the baseline a claim of expansion has to beat.
 
 The inference conditions matter here too. On these problems, 90% of the base model's responses reach the 16,384-token limit and count as incorrect, so part of "unsolved" is a length budget. And RL rollouts [sample at temperature 1.0 and top-p 1.0](https://github.com/hieutrungle/sharpen-or-expand/blob/main/docs/decisions/017-rl-rollout-sampling-1.0.md), a different sampler from evaluation, so the distribution the policy explores in training is not the one that is measured.
 </div>
@@ -229,9 +229,15 @@ $$
 H_{\text{correct}} = -\sum_{\tau \in \mathcal{S}(x)} q(\tau \mid x) \log q(\tau \mid x).
 $$
 
-The exponential $$N_{\text{eff}} = e^{H_{\text{correct}}}$$ is easier to read: it is the number of equally likely strategies that would have the same entropy. Ecologists know it as the Hill number of order 1, the "effective number of species" [6]. Applied to strategies instead of single trajectories, Model A has $$q = 1$$ on its one strategy and $$N_{\text{eff}} = 1$$. Model B has $$q = 0.25$$ on each of four, $$H_{\text{correct}} = \ln 4 \approx 1.39$$ and $$N_{\text{eff}} = 4$$. An uneven model with correct mass 0.3 and 0.1 on two strategies has $$q = (0.75, 0.25)$$ and $$N_{\text{eff}} \approx 1.75$$: two strategies, but one dominates.
+Over raw trajectories this entropy counts every wording separately. To count strategies, group the successful trajectories into strategy families $$z$$ and use the family masses instead:
 
-The unit matters. Computed over raw token sequences, $$H_{\text{correct}}$$ counts every rewording of a solution as a new trajectory, so it is large for any model and says little. What matters is semantic diversity: how many genuinely different ways the model has of solving the problem. Measuring it needs a way to group solutions into strategy families, by hand, with embeddings or with a judge model, and that grouping is a measurement choice in its own right. Diversity is relevant to the main question because it is what large-$$k$$ sampling and RL exploration draw on. A model that collapses onto one strategy can keep its pass@1 and have less to fall back on when that strategy fails. That is a plausible mechanism, not an established fact, and it has to be measured.
+$$
+q(z \mid x) = \sum_{\tau \in z} q(\tau \mid x), \qquad H_{\text{correct}} = -\sum_{z} q(z \mid x) \log q(z \mid x).
+$$
+
+The exponential $$N_{\text{eff}} = e^{H_{\text{correct}}}$$ is easier to read: it is the number of equally likely strategies that would have the same entropy. Ecologists know it as the Hill number of order 1, the "effective number of species" [6]. Model A has $$q = 1$$ on its one strategy and $$N_{\text{eff}} = 1$$. Model B has $$q = 0.25$$ on each of four, $$H_{\text{correct}} = \ln 4 \approx 1.39$$ and $$N_{\text{eff}} = 4$$. An uneven model with correct mass 0.3 and 0.1 on two strategies has $$q = (0.75, 0.25)$$ and $$N_{\text{eff}} \approx 1.75$$: two strategies, but one dominates.
+
+The unit matters. Computed over raw token sequences, the entropy counts every rewording of a solution as a new trajectory, so it is large for any model and says little. What matters is semantic diversity: how many genuinely different ways the model has of solving the problem. Measuring it needs a way to group solutions into strategy families, by hand, with embeddings or with a judge model, and that grouping is a measurement choice in its own right. Diversity is relevant to the main question because it is what large-$$k$$ sampling and RL exploration draw on. A model that collapses onto one strategy can keep its pass@1 and have less to fall back on when that strategy fails. That is a plausible mechanism, not an established fact, and it has to be measured.
 
 ## How strong is the evidence?
 

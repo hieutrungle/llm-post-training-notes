@@ -229,6 +229,9 @@ assert worst <= 0.1 + 1e-12, worst
 quote("anim p=0.001 runs solved by 1024", sum(x <= 1024 for x in hits[4]), "{:.0f}", "12")
 quote("anim p=0.001 runs with 0/1024", sum(x > 1024 for x in hits[4]), "{:.0f}", "8")
 quote("anim p=0.01 runs solved by 64", sum(x <= 64 for x in hits[3]), "{:.0f}", "9")
+n1 = sum(x <= 1 for x in hits[0])
+assert n1 == 9, n1
+quote("anim p=0.4 runs solved at k=1 (text)", n1, "{:.0f} of its 20 simulated runs", "9 of its 20 simulated runs")
 
 # --- In my experiments: re-read from the committed report -----------------------------------------
 
@@ -253,6 +256,10 @@ quote("hard truncation rate (%)", 100 * hard["truncation_rate"], "{:.0f}", "90")
 protocol = fetch("docs/decisions/004-evaluation-protocol.md").decode()
 for s in ("0.6 / 0.95", "16,384", "16 (main); 64 (hard subset", "at least\n0.5"):
     assert s in protocol, f"protocol text changed: {s!r}"
+sel = json.loads(fetch("docs/reports/m0_hard_subset_v1.json"))
+assert sel["rule"]["max_correct"] == 4 and sel["samples_per_problem"] == 16 and sel["max_correct_used"] == 4
+assert sel["sampling_seed"] != 0  # evaluation uses seed 0; selection used its own seed
+quote("hard selection: max correct of 16", sel["max_correct_used"], "at most {:.0f} times in 16 samples", "at most 4 times in 16 samples")
 rollout = fetch("docs/decisions/017-rl-rollout-sampling-1.0.md").decode()
 assert "temperature 1.0, top-p 1.0" in rollout
 
