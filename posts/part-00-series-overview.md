@@ -4,11 +4,12 @@ kind: Study notes
 date: 2026-11-16 00:00:00 -0600
 series: llm-post-training
 part: 0
+short_title: "Overview and roadmap"
 summary: "Does reinforcement learning teach a language model to reason in new ways, or make it more reliable at what it could already do? Part 0 of a 12-part series that builds LLM post-training from first principles and tests it in a real experiment."
 math: true
 ---
 
-*Part 0 of 12 · Notes, check scripts and references: [llm-post-training-notes](https://github.com/hieutrungle/llm-post-training-notes) · Experiments: [sharpen-or-expand](https://github.com/hieutrungle/sharpen-or-expand)*
+*Notes, check scripts and references: [llm-post-training-notes](https://github.com/hieutrungle/llm-post-training-notes) · Experiments: [sharpen-or-expand](https://github.com/hieutrungle/sharpen-or-expand)*
 
 <div class="goal" markdown="1">
 <span class="label">Goal of the series</span>
@@ -63,7 +64,7 @@ Parts 11 and 12 then turn this into systems awareness and a final synthesis.
 | Part | Question | Topics |
 |---|---|---|
 | 0 | Why this series? | The sharpen-or-expand question, roadmap, notation (this post) |
-| 1 | What does "capability" mean for an LLM? | Trajectory distributions, pass@1 and pass@k, accessibility, reasoning diversity, sharpening vs expansion |
+| 1 | [What does "capability" mean for an LLM?](/blog/2026/11/capability-and-pass-at-k/) | Trajectory distributions, pass@1 and pass@k, accessibility, reasoning diversity, sharpening vs expansion |
 | 2 | What does supervised fine-tuning do to the distribution? | Autoregressive likelihood, cross-entropy gradients, teacher forcing, forward KL |
 | 3 | How do we learn from "this is better than that"? | Bradley–Terry, KL-regularized RL, DPO derivation, the reference policy |
 | 4 | How do we sample, evaluate and reinforce? | REINFORCE, baselines, advantages, importance sampling, PPO clipping, KL, entropy |
@@ -76,7 +77,7 @@ Parts 11 and 12 then turn this into systems awareness and a final synthesis.
 | 11 | Which systems choices change results? | LoRA vs full fine-tuning, BF16, FSDP, vLLM rollouts, policy staleness |
 | 12 | Did RL sharpen or expand? | Reading the experiment's final results, alternative explanations |
 
-Links appear here as parts are published.
+Links appear here as parts are published; the [series page](/blog/series/llm-post-training/) lists every part.
 
 ## How each part is built
 
@@ -125,7 +126,7 @@ Several papers in this series use the same letter for different things. The tabl
 
 ## Next
 
-Part 1 starts at the bottom of the chain: what it means for a model to "be able to" solve a problem, why nonzero probability is not a useful definition, and how pass@k turns capability into something we can measure.
+[Part 1](/blog/2026/11/capability-and-pass-at-k/) starts at the bottom of the chain: what it means for a model to "be able to" solve a problem, why nonzero probability is not a useful definition, and how pass@k turns capability into something we can measure.
 
 ## References
 
