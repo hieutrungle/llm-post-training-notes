@@ -28,3 +28,15 @@ The raw notes in `notes/raw/` stay as written. Where a post corrects or sharpens
 - §11: the estimator $1 - \binom{n-c}{k}/\binom{n}{k}$ is the unbiased estimator of Chen et al. (2021), not just "standard"; it requires $n \ge k$. Part 1 also shows why the plug-in $1 - (1 - c/n)^k$ is biased low.
 - §12: $N_{\text{eff}} = e^{H}$ is the Hill number of order 1 (Hill, 1973), and it is meaningful over strategy families, not raw token sequences.
 - §13: the sharpen-versus-expand evidence is presented with both sides (Yue et al., 2025; ProRL, Liu et al., 2025; Wu et al., 2025, v5).
+
+### Block 2 (Part 2)
+
+- Q3, "at least three reasons" introduced a list of five; the post gives the five reasons as five.
+- §8–9 (teacher forcing, exposure bias): added the standard references. Ranzato et al. (2016) named exposure bias; Bengio et al. (2015) proposed scheduled sampling; Ross, Gordon and Bagnell (2011) give the $T^2\varepsilon$ compounding-error bound for behavior cloning (citing Ross and Bagnell, 2010) and DAgger, whose guarantee is linear in $T$.
+- §10: the data distribution is written $q_{\text{data}}(y \mid x)$, so it does not collide with Part 1's $q(\tau \mid x)$, the model's distribution over its own successful trajectories. The post also states the other half of "mode-covering relative to the data": responses with zero data probability contribute nothing to the KL, so maximum likelihood drives valid but undemonstrated solutions toward zero.
+- §11: $N_{\text{eff}}$ is computed over strategy families, as in Part 1 (2 before, 1.28 after for the A/B example).
+- §14: added that loss normalization (sum over tokens, mean per sequence, mean over all tokens in a batch) changes how long and short responses are weighted, with a forward pointer to the length bias in Parts 6–7.
+- §16: added the derivation $\nabla \log p_\theta(x) = \mathbb{E}_{\tau \sim q}[\nabla \log \pi_\theta(\tau \mid x)]$: likelihood training on the model's own successful samples estimates the gradient of the log success mass, provided the samples come from the current model unmodified (not, for example, at a lower temperature).
+- Q4 ($10^{-8} \to 10^{-2}$): "the trajectory already had nonzero probability" holds only for untruncated sampling; under top-p it may have had probability exactly zero. Accessibility is the total success mass $p_\theta(x; c)$ at a sampling budget, not one trajectory's probability, so a $10^6$ gain on one trajectory neither shows nor rules out operational expansion. Part 2, check-yourself question 3.
+- Q5: added that the expected-reward gradient raises every correct trajectory only in expectation; with finite samples, correct trajectories that are not drawn can go down.
+- New context for the experiment: the SFT arm is rejection-sampling fine-tuning on the base model's own verified solutions, placed next to STaR (Zelikman et al., 2022) and Yuan et al. (2023).

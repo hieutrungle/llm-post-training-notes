@@ -300,7 +300,7 @@ Because 0/64 does not mean $$p_{\text{SFT}} = 0$$. It is compatible with $$p_{\t
 
 ## Next
 
-Part 2 turns to the first post-training method in the chain, supervised fine-tuning. It asks what imitation does to the trajectory distribution $$\pi_\theta(\tau \mid x)$$ defined here: the autoregressive likelihood, the cross-entropy gradient, teacher forcing, and why SFT behaves like forward-KL minimization.
+[Part 2](/blog/2026/11/sft-probability-reshaping/) turns to the first post-training method in the chain, supervised fine-tuning. It asks what imitation does to the trajectory distribution $$\pi_\theta(\tau \mid x)$$ defined here: the autoregressive likelihood, the cross-entropy gradient, teacher forcing, and why SFT behaves like forward-KL minimization.
 
 ## References
 

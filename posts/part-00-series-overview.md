@@ -65,7 +65,7 @@ Parts 11 and 12 then turn this into systems awareness and a final synthesis.
 |---|---|---|
 | 0 | Why this series? | The sharpen-or-expand question, roadmap, notation (this post) |
 | 1 | [What does "capability" mean for an LLM?](/blog/2026/11/capability-and-pass-at-k/) | Trajectory distributions, pass@1 and pass@k, accessibility, reasoning diversity, sharpening vs expansion |
-| 2 | What does supervised fine-tuning do to the distribution? | Autoregressive likelihood, cross-entropy gradients, teacher forcing, forward KL |
+| 2 | [What does supervised fine-tuning do to the distribution?](/blog/2026/11/sft-probability-reshaping/) | Autoregressive likelihood, cross-entropy gradients, teacher forcing, forward KL |
 | 3 | How do we learn from "this is better than that"? | Bradley–Terry, KL-regularized RL, DPO derivation, the reference policy |
 | 4 | How do we sample, evaluate and reinforce? | REINFORCE, baselines, advantages, importance sampling, PPO clipping, KL, entropy |
 | 5 | How do we get an advantage without a critic? | GRPO, group-relative advantages, group size, mixed groups |
