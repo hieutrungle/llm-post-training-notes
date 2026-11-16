@@ -10,6 +10,12 @@ math: true
 
 *Part 0 of 12 · Notes, check scripts and references: [llm-post-training-notes](https://github.com/hieutrungle/llm-post-training-notes) · Experiments: [sharpen-or-expand](https://github.com/hieutrungle/sharpen-or-expand)*
 
+<div class="goal" markdown="1">
+<span class="label">Goal of the series</span>
+
+Understand LLM post-training from first principles, well enough to answer one question with evidence: **does reinforcement learning with verifiable rewards sharpen what a model can already do, or expand what it can solve?** Each part derives one piece of the theory, checks every number it quotes, and connects the theory to measurements from a real experiment.
+</div>
+
 ## The question
 
 Reinforcement learning with verifiable rewards (RLVR) has become a standard step in training reasoning models. The recipe is simple: sample several solutions to a math or coding problem, check each one with a program, and push the model toward the solutions that pass. DeepSeekMath introduced GRPO for this setting [1], and DeepSeek-R1 showed how far the recipe can go [2].
@@ -23,9 +29,17 @@ The evidence points both ways. Yue et al. [3] sampled base models and their RLVR
 
 The two readings make different predictions, and those predictions can be measured. The figure below shows the signature with made-up numbers.
 
-![Benchmark pass@k against the number of samples per problem k, on a log scale from 1 to 1024, for three illustrative models. The sharpened model beats the base model at k = 1 (0.47 vs 0.30) but falls below it from about k = 8 and ends at 0.71 vs 0.85 at k = 1024. The expanded model stays above both at every k and ends at 0.91.]({{ '/assets/img/llm-post-training/part-00-sharpen-vs-expand.png' | relative_url }})
+![Benchmark pass@k against the number of samples per problem k, on a log scale from 1 to 1024, for three illustrative models. The sharpened model beats the base model at k = 1 (0.47 vs 0.30) but falls below it from k = 7 and ends at 0.71 vs 0.85 at k = 1024. The expanded model stays above both at every k and ends at 0.91.]({{ '/assets/img/llm-post-training/part-00-sharpen-vs-expand.png' | relative_url }})
 
-pass@1 alone cannot tell these two models apart: both improve it. The difference only appears when we look at many samples per problem, and at which problems change. Most of this series is about making that comparison precise.
+The three curves are three hypothetical models evaluated on the same 1,000 problems. "Sharpened" makes already-common solutions more likely and lets rare ones fade; "Expanded" makes the same gain on common solutions and also makes 40% of the rarely or never solved problems reliably solvable. pass@k is the share of problems solved at least once in k samples.
+
+Read the curves from left to right:
+
+- **At k = 1**, both trained models beat the base model (0.47 and 0.53 vs 0.30). Single-sample accuracy cannot tell sharpening from expansion.
+- **As k grows**, the base model keeps finding its rare solutions, and from k = 7 on it is ahead of the sharpened model. At k = 1024 the base model solves 85% of the problems and the sharpened model 71%: the sharpened model traded its rare solutions for reliability on common ones.
+- **The expanded model** stays above the base model at every k and ends at 91%, because it now solves problems the base model rarely or never solved.
+
+So sharpening shows up as a *crossover* at large k, and expansion as a gap that *persists* at large k. Real models are harder to read than this cartoon. A problem with no success in 1,024 samples can still have a small nonzero success probability, so "never solved" is always a statement about a sampling budget. Part 1 makes that precise, and most of this series is about making the comparison rigorous.
 
 ## Why a series
 
