@@ -9,7 +9,7 @@ math: true
 anim: true
 ---
 
-*Notes, check scripts and references: [llm-post-training-notes](https://github.com/hieutrungle/llm-post-training-notes) · Experiments: [sharpen-or-expand](https://github.com/hieutrungle/sharpen-or-expand)*
+*Code, check scripts and references: [llm-post-training-notes](https://github.com/hieutrungle/llm-post-training-notes) · Experiments: [sharpen-or-expand](https://github.com/hieutrungle/sharpen-or-expand)*
 
 <div class="goal" markdown="1">
 <span class="label">Core idea</span>
@@ -59,7 +59,7 @@ So the support is either too large (softmax) or a property of the sampler (trunc
 How likely is the model to produce a successful trajectory under fixed inference conditions and a fixed sampling budget?
 </div>
 
-The study notes write this as a set of accessible trajectories, $$\mathcal{A}_\epsilon = \{\tau : \pi_\theta(\tau \mid x) \ge \epsilon\}$$. A threshold on single trajectories is awkward, though: a long solution can be correct in thousands of wordings, each of them individually improbable. The quantity that captures accessibility is the total mass $$p_\theta(x; c)$$, together with the number of samples we are willing to draw. pass@k combines the two.
+One could try to make "accessible" precise with a threshold on single trajectories, $$\mathcal{A}_\epsilon = \{\tau : \pi_\theta(\tau \mid x) \ge \epsilon\}$$. That misses the point. A long solution can be correct in thousands of wordings, each of them individually improbable, so a problem the model solves most of the time can have no single trajectory above the threshold. What makes a solution accessible is the total mass $$p_\theta(x; c)$$, together with the number of samples we are willing to draw. pass@k combines the two.
 
 ## pass@1 and pass@k
 
@@ -132,7 +132,7 @@ So pass@1 measures average reliability, and pass@k at large $$k$$ measures bread
 
 ## Sharpening vs operational expansion
 
-The study notes illustrate sharpening with one problem and made-up numbers. Before post-training, the model reaches correct answers through two strategies:
+Here is sharpening on one problem, with made-up numbers. Before post-training, the model reaches correct answers through two strategies:
 
 | Trajectories | Type | Probability before | Probability after |
 |---|---|---|---|

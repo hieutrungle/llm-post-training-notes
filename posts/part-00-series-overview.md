@@ -9,7 +9,7 @@ summary: "Does reinforcement learning teach a language model to reason in new wa
 math: true
 ---
 
-*Notes, check scripts and references: [llm-post-training-notes](https://github.com/hieutrungle/llm-post-training-notes) · Experiments: [sharpen-or-expand](https://github.com/hieutrungle/sharpen-or-expand)*
+*Code, check scripts and references: [llm-post-training-notes](https://github.com/hieutrungle/llm-post-training-notes) · Experiments: [sharpen-or-expand](https://github.com/hieutrungle/sharpen-or-expand)*
 
 <div class="goal" markdown="1">
 <span class="label">Goal of the series</span>
@@ -81,7 +81,7 @@ Links appear here as parts are published; the [series page](/blog/series/llm-pos
 
 ## How each part is built
 
-These are study notes: I am working through this material from first principles and writing it down as I go. Each part follows the same pattern:
+I am working through this material from first principles and writing it down as I go. Each part follows the same pattern:
 
 - **One question**, linked to the part before it.
 - **A derivation from first principles**, with worked numbers.

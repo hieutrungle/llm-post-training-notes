@@ -2,6 +2,10 @@
 
 Corrections made after a post was published, newest first. Each entry gives the part, the section, what changed and why.
 
+### 2026-11-17 · Parts 0–2, editorial
+
+Each part now reads on its own, using only earlier parts. Passages that cited the raw study notes were rewritten as self-contained explanations (Part 1: accessibility as a threshold on single trajectories, the sharpening example; Part 2: the four-decision path), and pointers to specific later parts were removed or replaced with references to earlier ones (Part 2: loss normalization, exposure bias and RL, reverse KL, the policy-gradient identity). The byline now reads "Code, check scripts and references". No derivation or number changed.
+
 ### 2026-11-16 · Part 1, "What does capability mean for an LLM?"
 
 A review after publication; no derivation or number changed.

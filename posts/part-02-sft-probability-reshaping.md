@@ -9,7 +9,7 @@ math: true
 anim: true
 ---
 
-*Notes, check scripts and references: [llm-post-training-notes](https://github.com/hieutrungle/llm-post-training-notes) · Experiments: [sharpen-or-expand](https://github.com/hieutrungle/sharpen-or-expand)*
+*Code, check scripts and references: [llm-post-training-notes](https://github.com/hieutrungle/llm-post-training-notes) · Experiments: [sharpen-or-expand](https://github.com/hieutrungle/sharpen-or-expand)*
 
 <div class="goal" markdown="1">
 <span class="label">Core idea</span>
@@ -75,7 +75,7 @@ The takeaway is that SFT is a redistribution. It is easy to read the loss as "ma
 
 ## Small local gains compound along a trajectory
 
-Because a trajectory's probability is a product, modest changes at each step multiply. The study notes use a four-decision path with local probabilities 0.5, 0.4, 0.5 and 0.5, so
+Because a trajectory's probability is a product, modest changes at each step multiply. Take a path of four decisions with local probabilities 0.5, 0.4, 0.5 and 0.5, so
 
 $$
 \pi(\tau) = 0.5 \times 0.4 \times 0.5 \times 0.5 = 0.05.
@@ -105,7 +105,7 @@ $$
 \underbrace{\frac{1}{\sum_i T_i}\sum_{i}\sum_{t} \ell_{i,t}}_{\text{token mean}}.
 $$
 
-They weight responses differently. Take a batch with one 100-token and one 1,000-token response. Under the sum, every token counts equally, so the long response carries 91% of the gradient. The token mean is the sum scaled by 1/1,100: within the batch it has the same proportions, but the scale changes with the total length of each batch. The per-sequence mean gives each response the same total weight, so each token of the short response gets weight 0.005 and each token of the long one 0.0005: a token in the short response counts 10 times as much. None of these is wrong, but they are different objectives. The same choice comes back in GRPO-style losses, where it turns into a length bias; Parts 6 and 7 work through it.
+They weight responses differently. Take a batch with one 100-token and one 1,000-token response. Under the sum, every token counts equally, so the long response carries 91% of the gradient. The token mean is the sum scaled by 1/1,100: within the batch it has the same proportions, but the scale changes with the total length of each batch. The per-sequence mean gives each response the same total weight, so each token of the short response gets weight 0.005 and each token of the long one 0.0005: a token in the short response counts 10 times as much. None of these is wrong, but they are different objectives, and the choice is easy to miss because it lives in a single line of training code.
 
 ## Local supervision, sequence-level correctness
 
@@ -135,7 +135,7 @@ Read the curves:
 - **Free-running, never recovers** follows the quadratic while $$T\varepsilon$$ is small: 4.9 mistakes at $$T = 100$$ against $$T^2\varepsilon/2 = 5$$, and 368 at $$T = 1{,}000$$, where it starts to bend because a response cannot contain more mistakes than tokens.
 - **Free-running, recovers with probability 0.1 per step** is linear again, but about ten times higher: 9.8 mistakes at $$T = 1{,}000$$.
 
-The per-step error rate that validation measures is the same in all three cases. What differs is whether the model has learned to get back on track, and teacher-forced data contains no examples of that. Reasoning traces run to thousands of tokens, which is where this gap matters. Note also that DAgger's fix needs an expert to label the learner's own states. RL, which later parts cover, also trains on $$d_{\pi_\theta}$$, the model's own states, but it replaces the expert's label with a reward for the finished trajectory.
+The per-step error rate that validation measures is the same in all three cases. What differs is whether the model has learned to get back on track, and teacher-forced data contains no examples of that. Reasoning traces run to thousands of tokens, which is where this gap matters. Note also that DAgger's fix needs an expert to label the learner's own states. Reinforcement learning with verifiable rewards, as described in Part 0, also trains on $$d_{\pi_\theta}$$, the model's own states, but it replaces the expert's label with a reward for the finished trajectory.
 
 ## The population view: SFT minimizes forward KL
 
@@ -153,7 +153,7 @@ $$
 \arg\min_\theta \mathcal{L}_{\text{SFT}} = \arg\min_\theta D_{\mathrm{KL}}\big(q_{\text{data}} \,\Vert\, \pi_\theta\big).
 $$
 
-Maximum likelihood is forward KL from the data to the model. Its term for each response is $$q_{\text{data}}(y)\log\big(q_{\text{data}}(y)/\pi_\theta(y)\big)$$, which blows up if the model gives near-zero probability to anything the data contains. So forward KL is *mode-covering*: the model must keep every mode that appears in the data. For example, if the demonstrations use strategy A 90% of the time and B 10%, a model that shrinks B from 0.1 to 0.01 pays 0.144 nats of forward KL. The reverse direction, which reappears in the KL-regularized objectives of Parts 3 and 4, would charge only 0.071 for the same change.
+Maximum likelihood is forward KL from the data to the model. Its term for each response is $$q_{\text{data}}(y)\log\big(q_{\text{data}}(y)/\pi_\theta(y)\big)$$, which blows up if the model gives near-zero probability to anything the data contains. So forward KL is *mode-covering*: the model must keep every mode that appears in the data. For example, if the demonstrations use strategy A 90% of the time and B 10%, a model that shrinks B from 0.1 to 0.01 pays 0.144 nats of forward KL. The reverse direction, $$D_{\mathrm{KL}}(\pi_\theta \Vert q_{\text{data}})$$, would charge only 0.071 for the same change.
 
 The covering is relative to the data, not to the set of correct solutions. A response with $$q_{\text{data}}(y) = 0$$ contributes nothing to the KL, whether it is correct or not. Probability placed there is simply missing from the demonstrated responses: if a model moves 0.3 of its mass onto a valid but undemonstrated strategy C, the loss rises by $$-\ln 0.7 \approx 0.357$$ nats. A sufficiently flexible model therefore drives every undemonstrated solution toward zero. SFT covers the modes it is shown and erodes the ones it is not.
 
@@ -207,7 +207,7 @@ $$
 \nabla_\theta \log p_\theta(x) = \frac{1}{p_\theta(x)} \sum_{\tau \in \mathcal{S}(x)} \pi_\theta(\tau \mid x)\, \nabla_\theta \log \pi_\theta(\tau \mid x) = \mathbb{E}_{\tau \sim q(\cdot \mid x)}\big[\nabla_\theta \log \pi_\theta(\tau \mid x)\big],
 $$
 
-where $$q(\tau \mid x)$$ is Part 1's distribution of the model's own successful trajectories. So the log-likelihood gradient *on the model's own correct samples* is an unbiased estimate of the gradient of $$\log p_\theta(x)$$, the log of the success mass. The checks script verifies this identity on a small autoregressive model. Two conditions matter. The samples must come from the current model as it is, not from a sharpened version of it, and a problem contributes only if at least one sample succeeds. **RL cannot reward a success it never samples**, and neither can this kind of self-training. Parts 4 and 5 build policy-gradient methods on the closely related identity $$\nabla_\theta \mathbb{E}[R] = \mathbb{E}[R\, \nabla_\theta \log \pi_\theta(\tau \mid x)]$$.
+where $$q(\tau \mid x)$$ is Part 1's distribution of the model's own successful trajectories. So the log-likelihood gradient *on the model's own correct samples* is an unbiased estimate of the gradient of $$\log p_\theta(x)$$, the log of the success mass. The checks script verifies this identity on a small autoregressive model. Two conditions matter. The samples must come from the current model as it is, not from a sharpened version of it, and a problem contributes only if at least one sample succeeds. **RL cannot reward a success it never samples**, and neither can this kind of self-training.
 
 <div class="note" markdown="1">
 <span class="label">In my experiments</span>
