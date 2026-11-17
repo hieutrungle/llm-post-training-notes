@@ -95,6 +95,44 @@ def p_star(p: float, beta: float) -> float:
     return p * g / (p * g + 1.0 - p)
 
 
+# --- 0. The opening picture (blog assets/js/anim/part-03-dpo-picture.js) ---------------------------
+# three outcomes with free logits (y_w, y_l, everything else), pi_ref = (0.20, 0.30, 0.50), beta = 1,
+# step size 1: each step adds the push beta*sigma(-beta*Delta) to z_w and subtracts it from z_l.
+PIC_REF = [0.20, 0.30, 0.50]
+
+
+def pic_probs(cshift: float) -> list[float]:
+    return softmax([math.log(PIC_REF[0]) + cshift, math.log(PIC_REF[1]) - cshift, math.log(PIC_REF[2])])
+
+
+cs = [0.0]
+for _ in range(6):
+    d = math.log(pic_probs(cs[-1])[0] / PIC_REF[0]) - math.log(pic_probs(cs[-1])[1] / PIC_REF[1])
+    cs.append(cs[-1] + 1.0 * sigmoid(-1.0 * d))
+for kstep, cshift in enumerate(cs):
+    pp = pic_probs(cshift)
+    d = math.log(pp[0] / PIC_REF[0]) - math.log(pp[1] / PIC_REF[1])
+    assert abs(d - 2 * cshift) < 1e-12
+    anim(f"picture step {kstep} y_w", pp[0], "{:.3f}", f"{pp[0]:.3f}")
+    anim(f"picture step {kstep} margin", d, "{:.2f}", f"{2 * cshift:.2f}")
+    anim(f"picture step {kstep} push", sigmoid(-d), "{:.3f}", f"{1 / (1 + math.exp(2 * cshift)):.3f}")
+# every step raises y_w and lowers y_l (free logits)
+for a, b in zip(cs, cs[1:]):
+    assert pic_probs(b)[0] > pic_probs(a)[0] and pic_probs(b)[1] < pic_probs(a)[1]
+pf = pic_probs(cs[-1])
+df = math.log(pf[0] / PIC_REF[0]) - math.log(pf[1] / PIC_REF[1])
+quote("picture y_w after 6 steps", pf[0], "{:.3f}", "0.548")
+quote("picture y_l after 6 steps", pf[1], "{:.3f}", "0.065")
+quote("picture others after 6 steps", pf[2], "{:.2f}", "0.39")
+quote("picture ratio y_w", pf[0] / PIC_REF[0], "{:.2f} times", "2.74 times")
+quote("picture ratio y_l", pf[1] / PIC_REF[1], "{:.2f} times", "0.22 times")
+quote("picture margin", df, "{:.2f}", "2.53")
+quote("picture push start", sigmoid(0.0), "{:.2f} to 0.074", "0.50 to 0.074")
+quote("picture push end", sigmoid(-df), "0.50 to {:.3f}", "0.50 to 0.074")
+anim("picture step 6 y_l", pf[1], "{:.3f}", "0.065")
+anim("picture step 6 ratio y_w", pf[0] / PIC_REF[0], "{:.2f}", "2.74")
+anim("picture step 6 ratio y_l", pf[1] / PIC_REF[1], "{:.2f}", "0.22")
+
 # --- 1. The Gibbs optimum ------------------------------------------------------------------------
 rng = random.Random(3)
 worst_gap, worst_val, worst_stat = float("inf"), 0.0, 0.0

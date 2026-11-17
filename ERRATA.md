@@ -2,6 +2,10 @@
 
 Corrections made after a post was published, newest first. Each entry gives the part, the section, what changed and why.
 
+### 2026-11-17 · Part 3, "The picture to keep in mind" (new section)
+
+Added an opening animation and section, before the derivation, that shows what DPO does to one training pair: the preferred response goes up, the dispreferred one goes down, both measured as ratios to the frozen reference, and the push fades as the margin grows (illustrative numbers with free logits, recomputed in `checks/part03_checks.py`). Two sentences that pointed to "the animation" now say which of the two animations they mean. No derivation or existing number changed.
+
 ### 2026-11-17 · Parts 0–2, editorial
 
 Each part now reads on its own, using only earlier parts. Passages that cited the raw study notes were rewritten as self-contained explanations (Part 1: accessibility as a threshold on single trajectories, the sharpening example; Part 2: the four-decision path), and pointers to specific later parts were removed or replaced with references to earlier ones (Part 2: loss normalization, exposure bias and RL, reverse KL, the policy-gradient identity). The byline now reads "Code, check scripts and references". No derivation or number changed.
