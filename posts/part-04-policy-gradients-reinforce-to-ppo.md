@@ -311,7 +311,7 @@ For the question of this series, the policy gradient sits between Part 3's two a
 
 ## Next
 
-Part 5 derives GRPO from first principles. Instead of a learned critic, it estimates the advantage from a group of samples for the same prompt, and the choices hidden in that estimate (centering, scaling by the standard deviation, the group size) decide what the update rewards.
+[Part 5](/blog/2026/11/grpo-from-first-principles/) derives GRPO from first principles. Instead of a learned critic, it estimates the advantage from a group of samples for the same prompt, and the choices hidden in that estimate (centering, scaling by the standard deviation, the group size) decide what the update rewards.
 
 ## References
 

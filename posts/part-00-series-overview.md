@@ -68,7 +68,7 @@ Parts 11 and 12 then turn this into systems awareness and a final synthesis.
 | 2 | [What does supervised fine-tuning do to the distribution?](/blog/2026/11/sft-probability-reshaping/) | Autoregressive likelihood, cross-entropy gradients, teacher forcing, forward KL |
 | 3 | [How do we learn from "this is better than that"?](/blog/2026/11/dpo-from-kl-regularized-rl/) | Bradley–Terry, KL-regularized RL, DPO derivation, the reference policy |
 | 4 | [How do we sample, evaluate and reinforce?](/blog/2026/11/policy-gradients-reinforce-to-ppo/) | REINFORCE, baselines, advantages, importance sampling, PPO clipping, KL, entropy |
-| 5 | How do we get an advantage without a critic? | GRPO, group-relative advantages, group size, mixed groups |
+| 5 | [How do we get an advantage without a critic?](/blog/2026/11/grpo-from-first-principles/) | GRPO, group-relative advantages, group size, mixed groups |
 | 6 | Why does vanilla GRPO fail? | Zero-variance groups, normalization biases, length bias, clipping, entropy collapse |
 | 7 | How do newer algorithms fix it? | Dr.GRPO, DAPO, RS-GRPO, each derived from the failure it targets |
 | 8 | What does a verifiable reward teach? | Sparse outcome rewards, verifier errors, reward hacking, credit assignment |

@@ -20,6 +20,7 @@ This repository holds everything behind the posts:
 | 2 | Supervised fine-tuning as probability reshaping: the cross-entropy gradient, compounding, exposure bias, forward KL | [blog](https://hieutrungle.github.io/blog/2026/11/sft-probability-reshaping/) · [source](posts/part-02-sft-probability-reshaping.md) | [part02_checks.py](checks/part02_checks.py) |
 | 3 | DPO from KL-regularized RL: Bradley–Terry, the Gibbs optimum, the binary-reward tilt, the DPO loss and gradient, likelihood displacement | [blog](https://hieutrungle.github.io/blog/2026/11/dpo-from-kl-regularized-rl/) · [source](posts/part-03-dpo-from-kl-regularized-rl.md) | [part03_checks.py](checks/part03_checks.py) |
 | 4 | Policy gradients for LLMs: REINFORCE to PPO: the log-derivative trick, baselines and RLOO, importance ratios, PPO clipping, KL placement, entropy, sparse rewards | [blog](https://hieutrungle.github.io/blog/2026/11/policy-gradients-reinforce-to-ppo/) · [source](posts/part-04-policy-gradients-reinforce-to-ppo.md) | [part04_checks.py](checks/part04_checks.py) |
+| 5 | GRPO from first principles: the group-relative advantage, its closed form for 0/1 rewards, which standard deviation, the per-prompt reweighting (arcsine limit), mixed groups, group size as an exploration budget | [blog](https://hieutrungle.github.io/blog/2026/11/grpo-from-first-principles/) · [source](posts/part-05-grpo-from-first-principles.md) | [part05_checks.py](checks/part05_checks.py) |
 | 5 | GRPO from first principles | planned | — |
 | 6 | Why vanilla GRPO fails | planned | — |
 | 7–12 | Modern GRPO family, reward theory, evaluation statistics, ablations, systems, synthesis | after the corresponding study block | — |
@@ -53,6 +54,9 @@ python figures/part03_tilt.py
 python checks/part04_checks.py   # recomputes every number in Part 4, including the simulation behind its animation
 python figures/part04_clip.py
 python figures/part04_baseline.py
+python checks/part05_checks.py   # recomputes every number in Part 5 (reads verl 0.9.1 and sharpen-or-expand at pinned commits)
+python -B figures/part05_weight.py
+python -B figures/part05_frontier.py
 ```
 
 ## Writing conventions
