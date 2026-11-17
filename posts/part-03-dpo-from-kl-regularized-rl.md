@@ -334,7 +334,7 @@ For the question of this series, the destination and the path give different ans
 
 ## Next
 
-Part 4 turns to that missing loop. Policy-gradient methods sample responses from the current policy, evaluate them, and reinforce the ones that score well. Part 4 derives the policy gradient from first principles, adds baselines and importance ratios, and builds up to PPO.
+[Part 4](/blog/2026/11/policy-gradients-reinforce-to-ppo/) turns to that missing loop. Policy-gradient methods sample responses from the current policy, evaluate them, and reinforce the ones that score well. Part 4 derives the policy gradient from first principles, adds baselines and importance ratios, and builds up to PPO.
 
 ## References
 

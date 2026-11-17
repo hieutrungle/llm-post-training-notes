@@ -19,7 +19,7 @@ This repository holds everything behind the posts:
 | 1 | What does "capability" mean? pass@k, its unbiased estimator, zero-success bounds | [blog](https://hieutrungle.github.io/blog/2026/11/capability-and-pass-at-k/) · [source](posts/part-01-capability-and-pass-at-k.md) | [part01_checks.py](checks/part01_checks.py) |
 | 2 | Supervised fine-tuning as probability reshaping: the cross-entropy gradient, compounding, exposure bias, forward KL | [blog](https://hieutrungle.github.io/blog/2026/11/sft-probability-reshaping/) · [source](posts/part-02-sft-probability-reshaping.md) | [part02_checks.py](checks/part02_checks.py) |
 | 3 | DPO from KL-regularized RL: Bradley–Terry, the Gibbs optimum, the binary-reward tilt, the DPO loss and gradient, likelihood displacement | [blog](https://hieutrungle.github.io/blog/2026/11/dpo-from-kl-regularized-rl/) · [source](posts/part-03-dpo-from-kl-regularized-rl.md) | [part03_checks.py](checks/part03_checks.py) |
-| 4 | Policy gradients: REINFORCE to PPO | planned | — |
+| 4 | Policy gradients for LLMs: REINFORCE to PPO: the log-derivative trick, baselines and RLOO, importance ratios, PPO clipping, KL placement, entropy, sparse rewards | [blog](https://hieutrungle.github.io/blog/2026/11/policy-gradients-reinforce-to-ppo/) · [source](posts/part-04-policy-gradients-reinforce-to-ppo.md) | [part04_checks.py](checks/part04_checks.py) |
 | 5 | GRPO from first principles | planned | — |
 | 6 | Why vanilla GRPO fails | planned | — |
 | 7–12 | Modern GRPO family, reward theory, evaluation statistics, ablations, systems, synthesis | after the corresponding study block | — |
@@ -50,6 +50,9 @@ python checks/part02_checks.py   # recomputes every number in Part 2 (reads its 
 python figures/part02_exposure.py
 python checks/part03_checks.py   # recomputes every number in Part 3 and checks the derivations numerically
 python figures/part03_tilt.py
+python checks/part04_checks.py   # recomputes every number in Part 4, including the simulation behind its animation
+python figures/part04_clip.py
+python figures/part04_baseline.py
 ```
 
 ## Writing conventions
