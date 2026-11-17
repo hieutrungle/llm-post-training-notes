@@ -2,6 +2,10 @@
 
 Corrections made after a post was published, newest first. Each entry gives the part, the section, what changed and why.
 
+### 2026-11-17 · Part 3, "Conclusion" (new section)
+
+Added a closing section between "Takeaways" and "Next" that returns to the opening picture and states what the part means for the series question: the target of KL-regularized preference learning is sharpening, while the training path, through shared parameters, is not constrained the same way, so the sharpening expected from offline DPO stays a hypothesis. No derivation or number changed.
+
 ### 2026-11-17 · Part 3, "The picture to keep in mind" (new section)
 
 Added an opening animation and section, before the derivation, that shows what DPO does to one training pair: the preferred response goes up, the dispreferred one goes down, both measured as ratios to the frozen reference, and the push fades as the margin grows (illustrative numbers with free logits, recomputed in `checks/part03_checks.py`). Two sentences that pointed to "the animation" now say which of the two animations they mean. No derivation or existing number changed.

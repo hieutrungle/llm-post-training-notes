@@ -326,6 +326,12 @@ The 300 shared tokens cancel exactly in $$\Delta$$ and receive no gradient from 
 - The gradient weight $$\beta\sigma(-\beta\Delta)$$ is largest on pairs the model gets wrong. One label is spread over every token after the first difference, and long responses carry larger log-ratios.
 - Offline DPO has no sample–discover–reinforce loop, so it plausibly leans toward sharpening. With verifier labels the preferences are deterministic, and $$\beta$$ no longer fixes the end point.
 
+## Conclusion
+
+The opening animation is the method in miniature: take a pair, push the better response up and the worse one down, measure both against the frozen reference, and push less once the pair is separated. The rest of this part showed why that update is the right one and what it aims at. DPO fits the Bradley–Terry preference model by maximum likelihood, with the policy itself as the reward model, and its target is the optimum of KL-regularized reward maximization: the reference reweighted by $$e^{r/\beta}$$. With a correctness reward, that target multiplies each problem's odds of success by $$e^{1/\beta}$$ and leaves the mix of correct solutions untouched. This part also showed where the picture breaks. The loss sees only a margin, so in a network with shared weights both responses can lose probability while the margin grows, and the mass moves to responses that no pair mentions.
+
+For the question of this series, the destination and the path give different answers. The destination is sharpening: at its optimum, KL-regularized preference learning makes solvable problems more reliable and cannot make an unsolvable problem solvable. The path is less constrained, because shared parameters move probability on responses and problems outside the data, and this part has not shown which way that goes for reasoning. Offline DPO on pairs sampled from the starting model, the design of the experiment above, is therefore expected to sharpen; that is a hypothesis to test, not a result. What offline DPO lacks is a loop that samples new responses from the current policy and reinforces the ones that work, and with verifier labels it also loses $$\beta$$'s control over where training ends.
+
 ## Next
 
 Part 4 turns to that missing loop. Policy-gradient methods sample responses from the current policy, evaluate them, and reinforce the ones that score well. Part 4 derives the policy gradient from first principles, adds baselines and importance ratios, and builds up to PPO.
