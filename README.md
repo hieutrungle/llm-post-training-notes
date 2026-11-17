@@ -18,7 +18,7 @@ This repository holds everything behind the posts:
 | 0 | Series overview, roadmap, notation | [blog](https://hieutrungle.github.io/blog/2026/11/llm-post-training-series/) · [source](posts/part-00-series-overview.md) | figure script only |
 | 1 | What does "capability" mean? pass@k, its unbiased estimator, zero-success bounds | [blog](https://hieutrungle.github.io/blog/2026/11/capability-and-pass-at-k/) · [source](posts/part-01-capability-and-pass-at-k.md) | [part01_checks.py](checks/part01_checks.py) |
 | 2 | Supervised fine-tuning as probability reshaping: the cross-entropy gradient, compounding, exposure bias, forward KL | [blog](https://hieutrungle.github.io/blog/2026/11/sft-probability-reshaping/) · [source](posts/part-02-sft-probability-reshaping.md) | [part02_checks.py](checks/part02_checks.py) |
-| 3 | DPO from KL-regularized RL | planned | — |
+| 3 | DPO from KL-regularized RL: Bradley–Terry, the Gibbs optimum, the binary-reward tilt, the DPO loss and gradient, likelihood displacement | [blog](https://hieutrungle.github.io/blog/2026/11/dpo-from-kl-regularized-rl/) · [source](posts/part-03-dpo-from-kl-regularized-rl.md) | [part03_checks.py](checks/part03_checks.py) |
 | 4 | Policy gradients: REINFORCE to PPO | planned | — |
 | 5 | GRPO from first principles | planned | — |
 | 6 | Why vanilla GRPO fails | planned | — |
@@ -48,6 +48,8 @@ python figures/part01_breadth.py
 python figures/part01_zero_bound.py
 python checks/part02_checks.py   # recomputes every number in Part 2 (reads its reports from sharpen-or-expand)
 python figures/part02_exposure.py
+python checks/part03_checks.py   # recomputes every number in Part 3 and checks the derivations numerically
+python figures/part03_tilt.py
 ```
 
 ## Writing conventions

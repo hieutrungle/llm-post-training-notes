@@ -294,7 +294,7 @@ The first says: make this demonstrated trajectory likely, and take the mass from
 
 ## Next
 
-Part 3 turns from demonstrations to comparisons. Direct preference optimization (DPO) learns from pairs of responses, one preferred over the other, and it comes from a KL-regularized RL objective with a frozen reference policy $$\pi_{\text{ref}}$$. Part 3 derives it, explains what $$\beta$$ controls, and shows why DPO can lower the probability of the preferred response.
+[Part 3](/blog/2026/11/dpo-from-kl-regularized-rl/) turns from demonstrations to comparisons. Direct preference optimization (DPO) learns from pairs of responses, one preferred over the other, and it comes from a KL-regularized RL objective with a frozen reference policy $$\pi_{\text{ref}}$$. Part 3 derives it, explains what $$\beta$$ controls, and shows why DPO can lower the probability of the preferred response.
 
 ## References
 
