@@ -309,7 +309,7 @@ For the question of this series, GRPO inherits the policy gradient's strength an
 
 ## Next
 
-Part 6 asks why vanilla GRPO fails. It maps the failure modes that the choices of this part create: zero-variance groups that waste samples, the per-prompt weighting from the standard deviation, the length weighting from the per-response average, and what they do to training.
+[Part 6](/blog/2026/11/why-vanilla-grpo-fails/) asks why vanilla GRPO fails. It maps the failure modes that the choices of this part create: zero-variance groups that waste samples, the per-prompt weighting from the standard deviation, the length weighting from the per-response average, and what they do to training.
 
 ## References
 

@@ -21,8 +21,7 @@ This repository holds everything behind the posts:
 | 3 | DPO from KL-regularized RL: Bradley–Terry, the Gibbs optimum, the binary-reward tilt, the DPO loss and gradient, likelihood displacement | [blog](https://hieutrungle.github.io/blog/2026/11/dpo-from-kl-regularized-rl/) · [source](posts/part-03-dpo-from-kl-regularized-rl.md) | [part03_checks.py](checks/part03_checks.py) |
 | 4 | Policy gradients for LLMs: REINFORCE to PPO: the log-derivative trick, baselines and RLOO, importance ratios, PPO clipping, KL placement, entropy, sparse rewards | [blog](https://hieutrungle.github.io/blog/2026/11/policy-gradients-reinforce-to-ppo/) · [source](posts/part-04-policy-gradients-reinforce-to-ppo.md) | [part04_checks.py](checks/part04_checks.py) |
 | 5 | GRPO from first principles: the group-relative advantage, its closed form for 0/1 rewards, which standard deviation, the per-prompt reweighting (arcsine limit), mixed groups, group size as an exploration budget | [blog](https://hieutrungle.github.io/blog/2026/11/grpo-from-first-principles/) · [source](posts/part-05-grpo-from-first-principles.md) | [part05_checks.py](checks/part05_checks.py) |
-| 5 | GRPO from first principles | planned | — |
-| 6 | Why vanilla GRPO fails | planned | — |
+| 6 | Why vanilla GRPO fails: a failure map: zero-variance groups and resampling, the standard-deviation weighting, the length weighting of verl's three loss aggregations (and a toy of when it lengthens wrong answers), symmetric clipping and rare tokens, truncation, optimizer bias vs exploration limitation | [blog](https://hieutrungle.github.io/blog/2026/11/why-vanilla-grpo-fails/) · [source](posts/part-06-why-vanilla-grpo-fails.md) | [part06_checks.py](checks/part06_checks.py) |
 | 7–12 | Modern GRPO family, reward theory, evaluation statistics, ablations, systems, synthesis | after the corresponding study block | — |
 
 The series page on the blog lists every part: https://hieutrungle.github.io/blog/series/llm-post-training/
@@ -57,6 +56,9 @@ python figures/part04_baseline.py
 python checks/part05_checks.py   # recomputes every number in Part 5 (reads verl 0.9.1 and sharpen-or-expand at pinned commits)
 python -B figures/part05_weight.py
 python -B figures/part05_frontier.py
+python checks/part06_checks.py   # recomputes every number in Part 6, including the simulation behind its animation (reads verl 0.9.1 and sharpen-or-expand at pinned commits)
+python -B figures/part06_zero_variance.py
+python -B figures/part06_length.py
 ```
 
 ## Writing conventions
